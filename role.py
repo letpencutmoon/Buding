@@ -27,7 +27,6 @@ class Buding(Sprite):
         self.x += (self.ai_settings.buding_speed_factor * self.ai_settings.fleet_direction)
         self.rect.x = self.x
 
-
 class Xcw(Sprite):
     def __init__(self,ai_settings,screen):
         super().__init__()

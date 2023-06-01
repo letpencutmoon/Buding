@@ -64,11 +64,15 @@ def update_screen(ai_sittings,screen,ship,budings,bullets,play_button,stats,sb):
         play_button.draw_button()
     pygame.display.flip()
 
+#更新子弹位置
 def update_bullets(ai_settings,screen,ship,budings,bullets,stats,sb):
+    #判断某个子弹是否到达顶部，到达就消失
     for bullet in bullets.copy():
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)
+    #检测子弹和敌人的碰撞
     check_bullet_buding_collisions(ai_settings,screen,ship,budings,bullets,stats,sb)
+    #如果敌人数量归0，就添加新敌人并提升敌人移动速度
     if len(budings) == 0:
         budings.empty()
         ai_settings.increase_speed()
@@ -76,13 +80,15 @@ def update_bullets(ai_settings,screen,ship,budings,bullets,stats,sb):
         sb.prep_score()
         create_fleet(ai_settings,screen,budings,ship)
 
-
+#子弹和敌人的碰撞检测
 def check_bullet_buding_collisions(ai_sittings,screen,ship,budings,bullets,stats,sb):
     collisions = pygame.sprite.groupcollide(bullets,budings,True,True)
+    #如果有碰撞就计分并更新分数
     if collisions:
         for budings in collisions.values():
             stats.score +=ai_sittings.buding_point*len(budings)
             sb.prep_score()
+        #更新最高分
         check_high_score(stats,sb)
 
 def get_number_budings_x(ai_sittings,buding_width):
@@ -103,6 +109,7 @@ def create_buding(ai_sittings,screen,budings,buding_number,row_number):
     buding.rect.y = buding.rect.height + 2*buding.rect.height*row_number
     budings.add(buding)
 
+#创建敌人
 def create_fleet(ai_sittings,screen,budings,ship):
     buding = Buding(ai_sittings,screen)
     number_budings_x = get_number_budings_x(ai_sittings,buding.rect.width)
